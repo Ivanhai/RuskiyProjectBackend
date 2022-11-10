@@ -10,7 +10,10 @@ app = FastAPI()
 @app.get("/{sentence}")
 async def root(sentence):
     doc = nlp(sentence)
-    return doc.to_json()
+    json = doc.to_json()
+    for index, token in enumerate(doc):
+        json["tokens"][index]["morph"] = token.morph.to_dict()
+    return json
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True, log_level="debug")
